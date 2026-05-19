@@ -1,0 +1,373 @@
+{
+  "icons": [
+    {
+      "id": "cc8f6141-4038-4125-98b3-9cfda780874a",
+      "name": "ai-start",
+      "filename": "6a28b585-62f9-48c5-875a-36af1a0ca164.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/6a28b585-62f9-48c5-875a-36af1a0ca164.svg",
+      "createdAt": "2026-05-18T09:13:03.314Z"
+    },
+    {
+      "id": "ecfdda86-7090-4027-86aa-98d8a2ef1647",
+      "name": "aiCodeTab",
+      "filename": "9b22c746-a78b-472c-9075-d628bab6777e.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/9b22c746-a78b-472c-9075-d628bab6777e.svg",
+      "createdAt": "2026-05-18T10:16:03.436Z"
+    },
+    {
+      "id": "db1011e2-f316-46e8-aa2c-aecef07f86d6",
+      "name": "aiMusic",
+      "filename": "fa40c1b6-4ce8-40ae-ba00-9f47800db1bd.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/fa40c1b6-4ce8-40ae-ba00-9f47800db1bd.svg",
+      "createdAt": "2026-05-18T10:18:00.761Z"
+    },
+    {
+      "id": "2e34ef45-4479-4877-a93a-5513aef85a07",
+      "name": "aiMusicTab",
+      "filename": "3ac8740d-27f7-4061-a323-78716ff544b6.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/3ac8740d-27f7-4061-a323-78716ff544b6.svg",
+      "createdAt": "2026-05-18T10:18:08.977Z"
+    },
+    {
+      "id": "30e13ad0-3a7a-4237-8fe1-c6a91f6dee4b",
+      "name": "aiPictureTab",
+      "filename": "ba58e288-5aad-42b8-9fd0-1de65cb6bc45.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/ba58e288-5aad-42b8-9fd0-1de65cb6bc45.svg",
+      "createdAt": "2026-05-18T10:18:15.750Z"
+    },
+    {
+      "id": "65480853-dee1-4bf2-ab3f-d897da5250f2",
+      "name": "aiSpeechTab",
+      "filename": "c1214e44-7549-4fb7-bbec-8d64a1c4c6d9.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/c1214e44-7549-4fb7-bbec-8d64a1c4c6d9.svg",
+      "createdAt": "2026-05-18T10:18:22.852Z"
+    },
+    {
+      "id": "65ec6af2-1dd2-468a-b110-c3c3ab14ad49",
+      "name": "aiVideoTab",
+      "filename": "65732d91-942e-4aa0-9637-cbcb7f636afe.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/65732d91-942e-4aa0-9637-cbcb7f636afe.svg",
+      "createdAt": "2026-05-18T10:18:38.324Z"
+    },
+    {
+      "id": "54fb7f30-048a-4cf5-b061-4452d828dcb5",
+      "name": "copy",
+      "filename": "8343c377-bc7e-41fd-8d44-cab3273d28d5.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/8343c377-bc7e-41fd-8d44-cab3273d28d5.svg",
+      "createdAt": "2026-05-18T10:19:21.571Z"
+    },
+    {
+      "id": "625e1c99-76cc-4e29-8fde-70117259b03a",
+      "name": "heart",
+      "filename": "2e0e68bf-050f-41ef-9dbe-1724393d5e40.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/2e0e68bf-050f-41ef-9dbe-1724393d5e40.svg",
+      "createdAt": "2026-05-18T10:19:30.886Z"
+    },
+    {
+      "id": "4e497045-4164-447e-8e8a-76a10cc5c19b",
+      "name": "lyrics",
+      "filename": "3131422d-dcfc-45a1-9325-e098225c6dd9.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/3131422d-dcfc-45a1-9325-e098225c6dd9.svg",
+      "createdAt": "2026-05-18T10:19:38.054Z"
+    },
+    {
+      "id": "9d0e71af-6f0c-4c76-a078-60bacb42c29b",
+      "name": "use",
+      "filename": "9b6ef9f0-6799-4d2c-a4a7-4582ab164d82.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/9b6ef9f0-6799-4d2c-a4a7-4582ab164d82.svg",
+      "createdAt": "2026-05-18T10:19:53.902Z"
+    },
+    {
+      "id": "b6a7d3ad-52a3-414e-a875-6820ec62f1dd",
+      "name": "alipay",
+      "filename": "fdebd40f-6452-4241-b7c1-37f9eec3cb96.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/fdebd40f-6452-4241-b7c1-37f9eec3cb96.svg",
+      "createdAt": "2026-05-18T10:24:55.573Z"
+    },
+    {
+      "id": "a3b5a445-2538-4a19-8a28-6b1ebdbfc48e",
+      "name": "delete",
+      "filename": "c3b9b2cf-99b0-43a7-a8b7-7e00161c5714.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/c3b9b2cf-99b0-43a7-a8b7-7e00161c5714.svg",
+      "createdAt": "2026-05-18T10:24:55.586Z"
+    },
+    {
+      "id": "60b63eb8-92e3-483c-8e73-b94584997221",
+      "name": "lock",
+      "filename": "874ae11f-24a9-45b0-bd2f-50903732af46.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/874ae11f-24a9-45b0-bd2f-50903732af46.svg",
+      "createdAt": "2026-05-18T10:24:55.589Z"
+    },
+    {
+      "id": "a6fb4404-3c9f-4e8f-b398-470a557c89e3",
+      "name": "payComplate",
+      "filename": "cb567ccf-9c3e-41d4-ad19-43bd8a8f40d1.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/cb567ccf-9c3e-41d4-ad19-43bd8a8f40d1.svg",
+      "createdAt": "2026-05-18T10:24:55.591Z"
+    },
+    {
+      "id": "be491313-1edf-4faf-8271-c3714c8af12a",
+      "name": "question",
+      "filename": "cb18eeee-1d8f-4af5-90e0-873cd2ce7fd7.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/cb18eeee-1d8f-4af5-90e0-873cd2ce7fd7.svg",
+      "createdAt": "2026-05-18T10:24:55.593Z"
+    },
+    {
+      "id": "1c1da145-7417-4e38-97a7-d9d6ca4b4938",
+      "name": "star",
+      "filename": "5999e825-cf5a-4155-8b30-93320d91d75a.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/5999e825-cf5a-4155-8b30-93320d91d75a.svg",
+      "createdAt": "2026-05-18T10:24:55.595Z"
+    },
+    {
+      "id": "bf50c750-814e-4d85-8512-8605f96658c8",
+      "name": "undo",
+      "filename": "9344a1c7-c8bc-40b9-8f19-3dd58a435c99.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/9344a1c7-c8bc-40b9-8f19-3dd58a435c99.svg",
+      "createdAt": "2026-05-18T10:24:55.597Z"
+    },
+    {
+      "id": "5ae8826c-ca11-47bc-b313-316a42b50275",
+      "name": "unionpay",
+      "filename": "e6ddf42e-44b5-4790-97c6-495dc0820123.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/e6ddf42e-44b5-4790-97c6-495dc0820123.svg",
+      "createdAt": "2026-05-18T10:24:55.600Z"
+    },
+    {
+      "id": "3136c787-ca61-4add-ac5c-c21f278e4d52",
+      "name": "wechat",
+      "filename": "745785c2-9977-47d8-9592-7eab480a2c4c.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/745785c2-9977-47d8-9592-7eab480a2c4c.svg",
+      "createdAt": "2026-05-18T10:24:55.602Z"
+    },
+    {
+      "id": "69193bd7-a2cf-45d0-9f3b-4e6447a69b8f",
+      "name": "nav01",
+      "filename": "e8d4a1b8-fa29-4713-8c23-29d275988b0d.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/e8d4a1b8-fa29-4713-8c23-29d275988b0d.svg",
+      "createdAt": "2026-05-18T10:27:42.597Z"
+    },
+    {
+      "id": "73b80a42-e678-4d04-a5cc-39c77bd9cdb3",
+      "name": "nav01Active",
+      "filename": "044d6968-8a42-4e76-b205-5ce81389d74c.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/044d6968-8a42-4e76-b205-5ce81389d74c.svg",
+      "createdAt": "2026-05-18T10:27:42.602Z"
+    },
+    {
+      "id": "e6c76e65-0c92-4b0f-9c8a-fd76bceb884d",
+      "name": "nav02",
+      "filename": "c7a2332d-8895-4340-a461-d61771e5256d.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/c7a2332d-8895-4340-a461-d61771e5256d.svg",
+      "createdAt": "2026-05-18T10:27:42.604Z"
+    },
+    {
+      "id": "456b2e53-1f29-4fe5-b03f-3d45ed678620",
+      "name": "nav02Active",
+      "filename": "d9deae8d-67ac-4329-88fd-04aef26e7836.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/d9deae8d-67ac-4329-88fd-04aef26e7836.svg",
+      "createdAt": "2026-05-18T10:27:42.606Z"
+    },
+    {
+      "id": "b52a2021-1d2d-4e48-993f-e02b88b4fd00",
+      "name": "nav03",
+      "filename": "d62a1049-4f8e-4fd0-aabd-db1c2bfe9070.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/d62a1049-4f8e-4fd0-aabd-db1c2bfe9070.svg",
+      "createdAt": "2026-05-18T10:27:42.608Z"
+    },
+    {
+      "id": "7aa91f7a-a143-4664-b078-df8805c0abe7",
+      "name": "nav03Active",
+      "filename": "45756b67-b29d-4c84-bcb0-560344334dab.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/45756b67-b29d-4c84-bcb0-560344334dab.svg",
+      "createdAt": "2026-05-18T10:27:42.610Z"
+    },
+    {
+      "id": "6f3689b2-71f7-43ed-a107-f07884b94ef9",
+      "name": "nav04",
+      "filename": "e4d2143f-149c-48f0-b03c-40c7e29c90d4.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/e4d2143f-149c-48f0-b03c-40c7e29c90d4.svg",
+      "createdAt": "2026-05-18T10:27:42.612Z"
+    },
+    {
+      "id": "9739ae42-173f-4793-a552-4fcc4ec89d27",
+      "name": "nav04Active",
+      "filename": "9968a6f8-849d-4414-9a45-ccf608b8f066.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/9968a6f8-849d-4414-9a45-ccf608b8f066.svg",
+      "createdAt": "2026-05-18T10:27:42.614Z"
+    },
+    {
+      "id": "42847143-9acc-46d9-bca9-8e5fa6f9f4ab",
+      "name": "nav05",
+      "filename": "a2bf54e2-131c-495b-adb9-32a09f4a34c7.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/a2bf54e2-131c-495b-adb9-32a09f4a34c7.svg",
+      "createdAt": "2026-05-18T10:27:42.615Z"
+    },
+    {
+      "id": "b48f28b7-cea0-459b-9c4e-d728dd47aa28",
+      "name": "nav05Active",
+      "filename": "a1da61e7-58d7-484e-82ff-f5887d9ae957.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/a1da61e7-58d7-484e-82ff-f5887d9ae957.svg",
+      "createdAt": "2026-05-18T10:27:42.617Z"
+    },
+    {
+      "id": "8d1bc490-a8bb-48b5-9b67-db7195796fe3",
+      "name": "nav06",
+      "filename": "a549a223-dad9-4a13-bc72-44f22e9b7488.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/a549a223-dad9-4a13-bc72-44f22e9b7488.svg",
+      "createdAt": "2026-05-18T10:27:42.619Z"
+    },
+    {
+      "id": "e0dad8f9-fdd4-4648-b31f-0aaa8e27ba7a",
+      "name": "nav06Active",
+      "filename": "a6709433-9686-46d3-bee9-9ac18ad09c92.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/a6709433-9686-46d3-bee9-9ac18ad09c92.svg",
+      "createdAt": "2026-05-18T10:27:42.620Z"
+    },
+    {
+      "id": "07e7c0ba-e765-468d-879f-288a0e48ebdd",
+      "name": "nav07",
+      "filename": "97bbc9e2-033f-43d5-a30e-df01a6e1b754.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/97bbc9e2-033f-43d5-a30e-df01a6e1b754.svg",
+      "createdAt": "2026-05-18T10:27:42.622Z"
+    },
+    {
+      "id": "7913b2f1-1fc1-4ab3-b926-15356dc532cf",
+      "name": "nav07Active",
+      "filename": "c354a717-a382-4be3-8194-4bb92c804b9d.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/c354a717-a382-4be3-8194-4bb92c804b9d.svg",
+      "createdAt": "2026-05-18T10:27:42.624Z"
+    },
+    {
+      "id": "cc6f21a1-eb3b-41cb-862b-0a14022f8228",
+      "name": "playNum",
+      "filename": "aabebb11-bb82-4306-9292-29bd3188f29f.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/aabebb11-bb82-4306-9292-29bd3188f29f.svg",
+      "createdAt": "2026-05-18T10:27:42.625Z"
+    },
+    {
+      "id": "4ef2b957-61e2-4ad8-afa9-1e301ef745bc",
+      "name": "emptyBuilding",
+      "filename": "dfa92695-6c61-44af-b884-7e6a08ff33bf.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/dfa92695-6c61-44af-b884-7e6a08ff33bf.svg",
+      "createdAt": "2026-05-18T10:28:34.053Z"
+    },
+    {
+      "id": "39b31b40-539c-4236-bc0e-5d9b767e2431",
+      "name": "emptyCourse",
+      "filename": "fd12374d-4b0b-430c-bc6a-2568fa16bfa5.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/fd12374d-4b0b-430c-bc6a-2568fa16bfa5.svg",
+      "createdAt": "2026-05-18T10:28:34.071Z"
+    },
+    {
+      "id": "8093944b-7a2a-46bf-802d-a00a51761370",
+      "name": "emptyData",
+      "filename": "03879e44-f256-43ac-ab91-6142e9fefa27.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/03879e44-f256-43ac-ab91-6142e9fefa27.svg",
+      "createdAt": "2026-05-18T10:28:34.074Z"
+    },
+    {
+      "id": "41d8b318-6ace-4293-86d4-f5b8a594f37b",
+      "name": "emptyMsg",
+      "filename": "251a7aeb-7b8c-4df9-b829-39b2520827bf.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/251a7aeb-7b8c-4df9-b829-39b2520827bf.svg",
+      "createdAt": "2026-05-18T10:28:34.076Z"
+    },
+    {
+      "id": "c045f95b-9628-439e-a40e-574099f5ae7e",
+      "name": "emptyNet",
+      "filename": "80ee5c06-b701-4678-b06f-763174127f58.svg",
+      "category": "通用",
+      "type": "svg",
+      "url": "/uploads/80ee5c06-b701-4678-b06f-763174127f58.svg",
+      "createdAt": "2026-05-18T10:28:34.079Z"
+    }
+  ],
+  "categories": [
+    "通用",
+    "箭头",
+    "编辑",
+    "媒体",
+    "社交",
+    "文件",
+    "其他"
+  ]
+}
