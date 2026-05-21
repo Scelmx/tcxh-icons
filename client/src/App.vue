@@ -214,7 +214,7 @@ import type { UploadUserFile } from 'element-plus'
 import { Picture, Upload, Search, Delete, Plus, UploadFilled, Setting, DocumentCopy } from '@element-plus/icons-vue'
 import { resolveIconMeta, toTemplateTag } from './utils/iconMeta'
 
-const API = 'http://localhost:3001'
+const API = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? 'http://localhost:4000' : '')
 
 interface Icon { id: string; name: string; url: string; category: string; type: string }
 

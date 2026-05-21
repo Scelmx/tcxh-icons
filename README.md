@@ -80,6 +80,82 @@ npm run build        # 构建前端
 npm start            # 启动后端（PORT 可通过环境变量配置）
 ```
 
+## 发布部署
+
+前后端分别打包，后端使用 [pkg](https://github.com/yao-pkg/pkg) 生成**无需安装 Node.js** 的可执行文件。
+
+### 构建
+
+```bash
+# 安装依赖（含 @yao-pkg/pkg）
+npm install
+cd client && npm install && cd ..
+
+# 一键构建前后端 -> dist/
+npm run build:release
+
+# 或分别构建
+npm run build:client   # -> dist/client/
+npm run build:server   # -> dist/server/（含可执行文件）
+```
+
+跨平台构建可指定目标：
+
+```bash
+# 示例：同时构建 Linux x64 与 Windows x64
+PKG_TARGETS=node18-linux-x64,node18-win-x64 npm run build:server
+```
+
+### 产物目录
+
+```
+dist/
+├── client/              # 前端静态资源，部署到 Nginx / CDN
+├── server/
+│   ├── tcxh-icons-server-node18-macos-arm64   # 可执行文件（名称随平台变化）
+│   ├── data/            # 图标元数据（icons.json）
+│   ├── uploads/         # 上传的 SVG/图片（构建时从 server/uploads 复制）
+│   ├── output/          # npm 发包临时目录
+│   ├── start.sh         # Linux/macOS 启动脚本
+│   └── start.bat        # Windows 启动脚本
+└── nginx.example.conf   # Nginx 反向代理示例
+```
+
+### 部署方式
+
+**方式一：前后端分离（推荐）**
+
+1. 将 `dist/server/` 上传到服务器，执行 `./start.sh`
+2. 将 `dist/client/` 部署到 Nginx，参考 `dist/nginx.example.conf` 代理 `/api` 与 `/uploads`
+
+> `start.sh` 默认会设置 `CLIENT_DIST=../client`，在**同一端口**同时提供前端页面与 API（例如 `http://localhost:4000`）。若图标显示为空白，请确认 `dist/server/uploads/` 内已有 SVG 文件（与 `data/icons.json` 中的 `filename` 对应）。
+
+**方式一（变体）：仅启动 API**
+
+```bash
+unset CLIENT_DIST   # 不托管前端，只提供 API
+./start.sh
+```
+
+**方式二：后端托管前端**
+
+```bash
+# 将 client 目录与 server 放在同级，启动时指定静态资源路径
+export CLIENT_DIST=/path/to/dist/client
+./start.sh
+```
+
+### 运行时环境变量
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `PORT` | `3001` | 监听端口 |
+| `TCXH_HOME` | 可执行文件所在目录 | 数据根目录（data / uploads / output） |
+| `CLIENT_DIST` | — | 前端静态资源目录，设置后由后端托管 |
+| `SERVE_CLIENT` | `0` | 设为 `1` 时从 `$TCXH_HOME/client` 托管前端 |
+
+> **说明**：「一键发包到 NPM」功能在 pkg 二进制中仍会调用系统上的 `pnpm`、`npm` 命令，目标机器需预装 Node.js 工具链；图标的上传、管理、预览等核心功能无需安装 Node。
+
 ## 使用指南
 
 ### 1. 管理图标
@@ -176,11 +252,12 @@ export function registerIcons(app: App) {
 | `POST` | `/api/publish` | 构建并发布到 npm |
 | `GET` | `/api/health` | 健康检查 |
 
-## 环境变量
+## 环境变量（开发）
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
 | `PORT` | `3001` | 后端监听端口 |
+| `VITE_API_BASE` | 开发时 `http://localhost:3001` | 前端 API 根地址（生产构建为空，走相对路径） |
 
 ## 相关说明
 
@@ -196,6 +273,9 @@ export function registerIcons(app: App) {
 | `npm run dev:server` | 仅启动 Express 后端 |
 | `npm run dev:client` | 仅启动 Vite 前端 |
 | `npm run build` | 构建前端静态资源 |
+| `npm run build:client` | 构建前端到 `dist/client/` |
+| `npm run build:server` | pkg 打包后端到 `dist/server/` |
+| `npm run build:release` | 前后端一并构建 |
 | `npm start` | 启动后端服务 |
 
 ## License

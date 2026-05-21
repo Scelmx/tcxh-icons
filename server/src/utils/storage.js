@@ -1,10 +1,11 @@
 const path = require('path');
 const fs = require('fs-extra');
+const { getRuntimeRoot } = require('./paths');
 
-// 目录配置
-const uploadsDir = path.join(__dirname, '../../uploads');
-const dataDir = path.join(__dirname, '../../data');
-const outputDir = path.join(__dirname, '../../output');
+const runtimeRoot = getRuntimeRoot();
+const uploadsDir = path.join(runtimeRoot, 'uploads');
+const dataDir = path.join(runtimeRoot, 'data');
+const outputDir = path.join(runtimeRoot, 'output');
 const iconsFile = path.join(dataDir, 'icons.json');
 
 // 确保目录存在
