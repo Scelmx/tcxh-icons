@@ -2,8 +2,11 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs-extra');
 const { execSync } = require('child_process');
-const { uploadsDir, outputDir, getData } = require('../utils/storage');
+const { outputDir, getData } = require('../utils/storage');
 const { resolveIconMeta, toTemplateTag } = require('../utils/iconMeta');
+const { normalizeColorMode } = require('../utils/colorMode');
+const { resolveUploadPath } = require('../utils/iconPath');
+const { processSvg, resolvePublishColorMode } = require('../utils/svgProcess');
 
 const router = express.Router();
 
@@ -22,24 +25,49 @@ const VUE_COMPONENT_DTS = `declare const _default: import('vue').DefineComponent
 export default _default
 `;
 
-// 生成 dist/types 下的 TypeScript 声明，供消费方获得完整类型提示
+const COLOR_MODE_DIRS = ['monochrome', 'multicolor'];
+
+// 生成 dist/types 下的 TypeScript 声明（components 按 monochrome / multicolor 分目录）
 const generateTypeDeclarations = (components, typesDir) => {
   const componentsDir = path.join(typesDir, 'components');
   fs.ensureDirSync(componentsDir);
 
-  for (const { fileName, exportName } of components) {
-    fs.writeFileSync(path.join(componentsDir, `${fileName}.vue.d.ts`), VUE_COMPONENT_DTS);
+  for (const mode of COLOR_MODE_DIRS) {
+    fs.ensureDirSync(path.join(componentsDir, mode));
+    const modeComponents = components.filter((c) => c.colorMode === mode);
+    for (const { fileName } of modeComponents) {
+      fs.writeFileSync(
+        path.join(componentsDir, mode, `${fileName}.vue.d.ts`),
+        VUE_COMPONENT_DTS
+      );
+    }
+    if (modeComponents.length) {
+      const componentExports = modeComponents
+        .map(({ fileName, exportName }) => `export { default as ${exportName} } from './${fileName}.vue'`)
+        .join('\n');
+      fs.writeFileSync(path.join(componentsDir, mode, 'index.d.ts'), `${componentExports}\n`);
+    }
   }
 
-  const componentExports = components
-    .map(({ fileName, exportName }) => `export { default as ${exportName} } from './${fileName}.vue'`)
+  const barrel = COLOR_MODE_DIRS.filter((mode) =>
+    components.some((c) => c.colorMode === mode)
+  )
+    .map((mode) => `export * from './${mode}'`)
     .join('\n');
-  fs.writeFileSync(path.join(componentsDir, 'index.d.ts'), `${componentExports}\n`);
+  fs.writeFileSync(path.join(componentsDir, 'index.d.ts'), `${barrel}\n`);
 
   const iconListLiteral = components.map((c) => `'${c.tag}'`).join(', ');
+  const monoList = components.filter((c) => c.colorMode === 'monochrome').map((c) => `'${c.tag}'`).join(', ');
+  const multiList = components.filter((c) => c.colorMode === 'multicolor').map((c) => `'${c.tag}'`).join(', ');
+
   fs.writeFileSync(
     path.join(typesDir, 'index.d.ts'),
-    `export * from './components'\nexport declare const iconList: readonly [${iconListLiteral}]\nexport type IconName = (typeof iconList)[number]\n`
+    `export * from './components'
+export declare const iconList: readonly [${iconListLiteral}]
+export type IconName = (typeof iconList)[number]
+${monoList ? `export declare const monochromeIconList: readonly [${monoList}]` : ''}
+${multiList ? `export declare const multicolorIconList: readonly [${multiList}]` : ''}
+`
   );
 
   const globalEntries = components
@@ -49,16 +77,6 @@ const generateTypeDeclarations = (components, typesDir) => {
     path.join(typesDir, 'global.d.ts'),
     `import * as components from './components'\n\ndeclare module 'vue' {\n  export interface GlobalComponents {\n${globalEntries}\n  }\n}\n`
   );
-};
-
-// 处理 SVG 内容
-const processSvg = (content) => {
-  return content
-    .replace(/<\?xml[^?]*\?>/g, '')
-    .replace(/<!DOCTYPE[^>]*>/g, '')
-    .replace(/width="[^"]*"/g, 'width="1em"')
-    .replace(/height="[^"]*"/g, 'height="1em"')
-    .replace(/fill="(?!none)[^"]*"/g, 'fill="currentColor"');
 };
 
 // 解析 npm 命令错误，返回友好提示
@@ -157,10 +175,13 @@ router.post('/preview', (req, res) => {
     iconCount: svgIcons.length,
     icons: svgIcons.map((i) => {
       const meta = resolveIconMeta(i.name);
+      const rawSvg = fs.readFileSync(resolveUploadPath(i), 'utf-8');
+      const colorMode = resolvePublishColorMode(i, rawSvg);
       return {
         id: i.id,
         name: i.name,
         url: i.url,
+        colorMode,
         tag: meta.tag,
         exportName: meta.exportName,
         template: toTemplateTag(meta.tag),
@@ -204,27 +225,62 @@ router.post('/', async (req, res) => {
     // 复制 .npmrc
     fs.copyFileSync(npmrcPath, path.join(pkgDir, '.npmrc'));
 
-    // 生成 Vue 组件（放在 src/components/ 下，文件名与模板标签均为 kebab-case + -icon）
+    // 生成 Vue 组件（src/components/monochrome | multicolor）
     const components = [];
     for (const icon of svgIcons) {
       const meta = resolveIconMeta(icon.name);
-      const svgContent = processSvg(fs.readFileSync(path.join(uploadsDir, icon.filename), 'utf-8'));
+      const rawSvg = fs.readFileSync(resolveUploadPath(icon), 'utf-8');
+      const colorMode = resolvePublishColorMode(icon, rawSvg);
+      const modeDir = path.join(componentsDir, colorMode);
+      fs.ensureDirSync(modeDir);
+
+      const svgContent = processSvg(rawSvg, colorMode);
+
+      if (colorMode === 'multicolor' && /fill="currentColor"/i.test(svgContent)) {
+        throw new Error(
+          `[${icon.name}] 多色图标不应包含 currentColor，请确认服务端代码已更新并重启后再发布`
+        );
+      }
 
       fs.writeFileSync(
-        path.join(componentsDir, `${meta.fileName}.vue`),
+        path.join(modeDir, `${meta.fileName}.vue`),
         `<template>\n  ${svgContent.trim()}\n</template>\n<script setup lang="ts">\ndefineOptions({ name: '${meta.exportName}' })\n</script>\n`
       );
-      components.push(meta);
+      components.push({ ...meta, colorMode });
+      console.log(`[publish] ${icon.name} → ${colorMode}/ (${colorMode === 'multicolor' ? '保留 #hex' : 'currentColor'})`);
     }
 
-    // 生成入口文件
+    fs.writeJsonSync(
+      path.join(pkgDir, 'publish-manifest.json'),
+      {
+        generatedAt: new Date().toISOString(),
+        icons: components.map((c) => ({
+          name: c.tag,
+          exportName: c.exportName,
+          colorMode: c.colorMode,
+        })),
+      },
+      { spaces: 2 }
+    );
+
     const exports = components
-      .map(({ fileName, exportName }) => `export { default as ${exportName} } from './components/${fileName}.vue'`)
+      .map(
+        ({ fileName, exportName, colorMode }) =>
+          `export { default as ${exportName} } from './components/${colorMode}/${fileName}.vue'`
+      )
       .join('\n');
     const iconTags = components.map((c) => c.tag);
+    const monochromeTags = components.filter((c) => c.colorMode === 'monochrome').map((c) => c.tag);
+    const multicolorTags = components.filter((c) => c.colorMode === 'multicolor').map((c) => c.tag);
+
     fs.writeFileSync(
       path.join(srcDir, 'index.ts'),
-      `${exports}\n\nexport const iconList = ${JSON.stringify(iconTags)} as const\n`
+      `${exports}
+
+export const iconList = ${JSON.stringify(iconTags)} as const
+export const monochromeIconList = ${JSON.stringify(monochromeTags)} as const
+export const multicolorIconList = ${JSON.stringify(multicolorTags)} as const
+`
     );
 
     // 生成 package.json（对齐 @element-plus/icons-vue 的 exports / types 配置）
@@ -319,10 +375,17 @@ export default defineConfig({
     });
 
     const sample = components[0];
+    const monoPublished = components.filter((c) => c.colorMode === 'monochrome').length;
+    const multiPublished = components.filter((c) => c.colorMode === 'multicolor').length;
     res.json({
       success: true,
-      message: `${packageName}@${version} 发布成功!`,
-      components: components.map((c) => ({ tag: c.tag, exportName: c.exportName })),
+      message: `${packageName}@${version} 发布成功!（单色 ${monoPublished}，多色 ${multiPublished}）`,
+      stats: { monochrome: monoPublished, multicolor: multiPublished },
+      components: components.map((c) => ({
+        tag: c.tag,
+        exportName: c.exportName,
+        colorMode: c.colorMode,
+      })),
       install: `npm install ${packageName}`,
       usage: sample
         ? {

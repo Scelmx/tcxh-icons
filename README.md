@@ -9,7 +9,8 @@
 - **一键发包** — 自动将 SVG 转为 Vue 单文件组件，经 Vite 构建后发布到 npm
 - **命名规范** — 统一生成 `kebab-case` 组件标签（如 `ai-start-icon`）与 PascalCase 导出名（如 `AiStartIcon`）
 - **完整类型** — 自动生成 `dist/types`，含 `iconList`、`IconName` 与 Vue 全局组件声明
-- **SVG 预处理** — 发布时自动将尺寸设为 `1em`、填充色改为 `currentColor`，便于主题适配
+- **单色 / 多色分目录** — 源文件存放在 `uploads/monochrome/`、`uploads/multicolor/`；发包后组件位于 `components/monochrome/`、`components/multicolor/`
+- **SVG 预处理** — 单色：`fill` → `currentColor`；多色：保留原始 `#hex` fill，仅规范尺寸为 `1em`
 
 ## 技术栈
 
@@ -35,7 +36,9 @@ tcxh-icons/
 │   │   │   └── publish.js  # npm 配置与发包
 │   │   └── utils/
 │   ├── data/icons.json     # 图标元数据
-│   ├── uploads/            # 上传文件存储
+│   ├── uploads/
+│   │   ├── monochrome/     # 单色 SVG（发包时 fill → currentColor）
+│   │   └── multicolor/     # 多色 SVG（保留原始 fill）
 │   └── output/             # 发包构建临时目录（已 gitignore）
 └── package.json            # 根脚本：同时启动前后端
 ```
@@ -144,6 +147,21 @@ export function registerIcons(app: App) {
   }
 }
 ```
+
+## 单色 / 多色
+
+| 模式 | 存储目录 | 发包构建 |
+|------|----------|----------|
+| `monochrome` | `uploads/monochrome/` | `fill` 转为 `currentColor`，随文字色变化 |
+| `multicolor` | `uploads/multicolor/` | 保留 `#hex` / `url(#gradient)` 等原始颜色 |
+
+上传 SVG 时会**自动识别**单色/多色（多种 `fill`/`stroke` 或渐变即为多色），并放入对应目录；选择文件后可在上传弹窗查看识别预览。已有平铺在 `uploads/` 根目录的旧文件可执行迁移：
+
+```bash
+npm run migrate:color-dirs
+```
+
+会根据 SVG 内容自动判断归入 `monochrome` 或 `multicolor`，并更新 `icons.json`。
 
 ## 图标命名规则
 

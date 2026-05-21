@@ -7,8 +7,10 @@ const dataDir = path.join(__dirname, '../../data');
 const outputDir = path.join(__dirname, '../../output');
 const iconsFile = path.join(dataDir, 'icons.json');
 
-// 确保目录存在
+// 确保目录存在（SVG 按 monochrome / multicolor 分目录存放）
 fs.ensureDirSync(uploadsDir);
+fs.ensureDirSync(path.join(uploadsDir, 'monochrome'));
+fs.ensureDirSync(path.join(uploadsDir, 'multicolor'));
 fs.ensureDirSync(dataDir);
 fs.ensureDirSync(outputDir);
 

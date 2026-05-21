@@ -7,7 +7,9 @@
     "dev:server": "node server/src/index.js",
     "dev:client": "cd client && npm run dev",
     "build": "cd client && npm run build",
-    "start": "node server/src/index.js"
+    "start": "node server/src/index.js",
+    "migrate:color-dirs": "node scripts/migrate-color-dirs.js",
+    "verify:publish-colors": "node scripts/verify-publish-colors.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

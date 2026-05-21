@@ -43,6 +43,14 @@
         <img :src="API + icon.url" :alt="icon.name" class="icon-img" />
         <span class="icon-name" :title="icon.name">{{ icon.name }}</span>
         <template v-if="icon.type === 'svg'">
+          <el-tag
+            v-if="icon.colorMode"
+            size="small"
+            :type="icon.colorMode === 'multicolor' ? 'warning' : 'info'"
+            class="color-mode-tag"
+          >
+            {{ icon.colorMode === 'multicolor' ? '多色' : '单色' }}
+          </el-tag>
           <span class="icon-tag" :title="getTemplateTag(icon.name)">{{ getIconTag(icon.name) }}</span>
           <el-button
             class="copy-tag-btn"
@@ -81,8 +89,27 @@
       >
         <el-icon :size="48"><UploadFilled /></el-icon>
         <div>拖拽文件到此处，或点击选择（支持批量）</div>
-        <template #tip><div class="tip">支持 SVG / PNG / JPG / WEBP / GIF，可多选</div></template>
+        <template #tip><div class="tip">支持 SVG / PNG / JPG / WEBP / GIF，可多选；SVG 将自动识别单色/多色</div></template>
       </el-upload>
+      <el-alert
+        v-if="uploadDetectLoading"
+        type="info"
+        :closable="false"
+        show-icon
+        class="detect-alert"
+      >
+        正在识别 SVG 色彩模式…
+      </el-alert>
+      <el-alert
+        v-else-if="uploadDetectSummary"
+        type="success"
+        :closable="false"
+        show-icon
+        class="detect-alert"
+      >
+        识别预览：单色 {{ uploadDetectSummary.mono }} 个，多色 {{ uploadDetectSummary.multi }} 个
+        <template v-if="uploadDetectSummary.other">，位图 {{ uploadDetectSummary.other }} 个</template>
+      </el-alert>
       <el-form :model="form" label-width="80px" style="margin-top: 20px">
         <el-form-item label="图标名称">
           <el-input
@@ -182,6 +209,9 @@
           <img :src="API + item.url" :alt="item.name" class="publish-icon-img" />
           <div class="publish-icon-meta">
             <span class="publish-icon-name">{{ item.name }}</span>
+            <el-tag size="small" :type="item.colorMode === 'multicolor' ? 'warning' : 'info'">
+              {{ item.colorMode === 'multicolor' ? '多色' : '单色' }}
+            </el-tag>
             <code class="publish-icon-tag" :title="item.template">{{ item.template }}</code>
             <el-button size="small" type="primary" plain @click="copyText(item.template)">
               <el-icon><DocumentCopy /></el-icon>
@@ -208,15 +238,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { UploadUserFile } from 'element-plus'
 import { Picture, Upload, Search, Delete, Plus, UploadFilled, Setting, DocumentCopy } from '@element-plus/icons-vue'
 import { resolveIconMeta, toTemplateTag } from './utils/iconMeta'
+import { detectColorModeFromFile } from './utils/detectColorMode'
 
-const API = 'http://localhost:3001'
+const API = 'http://localhost:5001'
 
-interface Icon { id: string; name: string; url: string; category: string; type: string }
+interface Icon {
+  id: string
+  name: string
+  url: string
+  category: string
+  type: string
+  colorMode?: 'monochrome' | 'multicolor'
+}
 
 const icons = ref<Icon[]>([])
 const categories = ref<string[]>([])
@@ -233,6 +271,8 @@ const savingConfig = ref(false)
 const npmConfigured = ref(false)
 const npmRegistry = ref('https://registry.npmjs.org/')
 const form = ref({ name: '', category: '通用' })
+const uploadDetectLoading = ref(false)
+const uploadDetectSummary = ref<{ mono: number; multi: number; other: number } | null>(null)
 const pkg = ref({ packageName: 'tcxh-icons', version: '1.0.0', description: '童创星河图标库' })
 const npmConfig = ref({ token: '', registry: 'https://registry.npmjs.org/' })
 const usageHint = ref<{ import: string; template: string } | null>(null)
@@ -241,6 +281,7 @@ interface PublishIconPreview {
   id: string
   name: string
   url: string
+  colorMode: 'monochrome' | 'multicolor'
   tag: string
   exportName: string
   template: string
@@ -352,7 +393,32 @@ const resetNpmConfig = async () => {
 const resetUploadDialog = () => {
   form.value = { name: '', category: '通用' }
   uploadFileList.value = []
+  uploadDetectSummary.value = null
+  uploadDetectLoading.value = false
 }
+
+watch(uploadFileList, async (list) => {
+  uploadDetectSummary.value = null
+  if (!list.length) return
+
+  uploadDetectLoading.value = true
+  let mono = 0
+  let multi = 0
+  let other = 0
+
+  try {
+    for (const item of list) {
+      if (!item.raw) continue
+      const mode = await detectColorModeFromFile(item.raw)
+      if (mode === 'multicolor') multi++
+      else if (mode === 'monochrome') mono++
+      else other++
+    }
+    uploadDetectSummary.value = { mono, multi, other }
+  } finally {
+    uploadDetectLoading.value = false
+  }
+}, { deep: true })
 
 const openUpload = () => {
   uploadVisible.value = true
@@ -366,6 +432,8 @@ const confirmUpload = async () => {
   uploading.value = true
   let success = 0
   let failed = 0
+  let mono = 0
+  let multi = 0
 
   for (const item of uploadFileList.value) {
     if (!item.raw) continue
@@ -377,8 +445,13 @@ const confirmUpload = async () => {
     }
     try {
       const res = await fetch(`${API}/api/icons`, { method: 'POST', body: fd })
-      if (res.ok) success++
-      else failed++
+      if (res.ok) {
+        const data = await res.json()
+        success++
+        if (data.icon?.type === 'svg') {
+          data.icon.colorMode === 'multicolor' ? multi++ : mono++
+        }
+      } else failed++
     } catch {
       failed++
     }
@@ -387,8 +460,11 @@ const confirmUpload = async () => {
   uploading.value = false
 
   if (success > 0) {
+    const colorHint = mono || multi ? `（${[mono && `${mono} 单色`, multi && `${multi} 多色`].filter(Boolean).join('，')}）` : ''
     ElMessage.success(
-      failed > 0 ? `成功上传 ${success} 个，${failed} 个失败` : `成功上传 ${success} 个图标`
+      failed > 0
+        ? `成功上传 ${success} 个${colorHint}，${failed} 个失败`
+        : `成功上传 ${success} 个图标${colorHint}`
     )
     uploadVisible.value = false
     fetchData()
@@ -480,6 +556,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 .icon-img { width: 48px; height: 48px; object-fit: contain; margin-bottom: 8px; }
 .icon-name { font-size: 12px; color: #303133; text-align: center; word-break: break-all; font-weight: 500; }
+.detect-alert { margin-top: 12px; }
+.color-mode-tag { margin-top: 6px; }
 .icon-tag {
   font-size: 11px; color: #409eff; font-family: ui-monospace, monospace;
   margin-top: 4px; text-align: center; word-break: break-all;
